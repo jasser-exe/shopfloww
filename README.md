@@ -265,4 +265,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**Built with ❤️ using Spring Boot 3 and Angular 17**
+** using Spring Boot 3 and Angular 17**
