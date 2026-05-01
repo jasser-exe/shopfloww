@@ -4,7 +4,9 @@ spring:
 
 ---
 spring:
-  profiles: dev
+  config:
+    activate:
+      on-profile: dev
   datasource:
     url: jdbc:h2:mem:shopflow;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
@@ -20,7 +22,7 @@ spring:
     show-sql: true
 
 server:
-  port: 8080
+  port: 8083
 
 app:
   jwt:
@@ -29,7 +31,9 @@ app:
 
 ---
 spring:
-  profiles: prod
+  config:
+    activate:
+      on-profile: prod
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/shopflow}
     driver-class-name: org.postgresql.Driver
@@ -41,7 +45,7 @@ spring:
     show-sql: false
 
 server:
-  port: ${PORT:8080}
+  port: ${PORT:8083}
 
 app:
   jwt:

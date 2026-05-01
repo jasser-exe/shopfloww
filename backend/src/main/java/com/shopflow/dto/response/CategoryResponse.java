@@ -2,6 +2,7 @@ package com.shopflow.dto.response;
 
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -13,6 +14,6 @@ public class CategoryResponse {
     private String name;
     private String description;
     @Builder.Default
-    private List<CategoryResponse> children = java.util.ArrayList.newArrayList();
+    private List<CategoryResponse> children = new ArrayList<>();
 }
 

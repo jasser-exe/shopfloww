@@ -1,0 +1,74 @@
+
+> frontend@0.0.0 start
+> ng serve --port 4300
+
+[33m>[39m Building...
+[32m√[39m Building...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m                    [2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m                     [2m | [22m [36m51.05 kB[39m[2m | [22m
+[32mchunk-5WNGXGCK.js[39m  [2m | [22m[2m-[22m                        [2m | [22m  [36m2.80 kB[39m[2m | [22m
+[32mchunk-JL7JJVON.js[39m  [2m | [22m[2m-[22m                        [2m | [22m  [36m2.72 kB[39m[2m | [22m
+[32mchunk-VUJOFXKG.js[39m  [2m | [22m[2m-[22m                        [2m | [22m[36m938 bytes[39m[2m | [22m
+[32mstyles.css[39m         [2m | [22m[2mstyles[22m                   [2m | [22m [36m96 bytes[39m[2m | [22m
+
+[1m [22m                  [2m | [22m[1mInitial total[22m            [2m | [22m [1m57.61 kB[22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m                    [2m | [22m [1mRaw size[22m
+[32mchunk-52MDAJ4L.js[39m  [2m | [22m[2mproduct-detail-component[22m [2m | [22m [36m72.87 kB[39m[2m | [22m
+[32mchunk-6SPO33O3.js[39m  [2m | [22m[2mproducts-component[22m       [2m | [22m [36m62.99 kB[39m[2m | [22m
+[32mchunk-5L3CE5ZX.js[39m  [2m | [22m[2m-[22m                        [2m | [22m [36m25.83 kB[39m[2m | [22m
+[32mchunk-Y7UEI27X.js[39m  [2m | [22m[2mregister-component[22m       [2m | [22m [36m17.05 kB[39m[2m | [22m
+[32mchunk-UZYVKGL3.js[39m  [2m | [22m[2mlogin-component[22m          [2m | [22m [36m13.97 kB[39m[2m | [22m
+[32mchunk-47I3C3W3.js[39m  [2m | [22m[2mforbidden-component[22m      [2m | [22m  [36m4.89 kB[39m[2m | [22m
+[32mchunk-DPYMM6YY.js[39m  [2m | [22m[2mnot-found-component[22m      [2m | [22m  [36m4.86 kB[39m[2m | [22m
+[32mchunk-ETHSSFCO.js[39m  [2m | [22m[2mcustomer-orders-component[22m[2m | [22m  [36m3.27 kB[39m[2m | [22m
+[32mchunk-KCBARQY2.js[39m  [2m | [22m[2morder-detail-component[22m   [2m | [22m  [36m3.19 kB[39m[2m | [22m
+[32mchunk-IAGVSFC3.js[39m  [2m | [22m[2mdashboard-component[22m      [2m | [22m  [36m3.11 kB[39m[2m | [22m
+[32mchunk-E3MCEI4P.js[39m  [2m | [22m[2mcheckout-component[22m       [2m | [22m  [36m3.08 kB[39m[2m | [22m
+[32mchunk-ZPA5AMXE.js[39m  [2m | [22m[2mseller-component[22m         [2m | [22m  [36m3.04 kB[39m[2m | [22m
+[32mchunk-CLYZKAIJ.js[39m  [2m | [22m[2madmin-component[22m          [2m | [22m  [36m3.00 kB[39m[2m | [22m
+[32mchunk-NNYP7MPY.js[39m  [2m | [22m[2mcart-component[22m           [2m | [22m  [36m2.98 kB[39m[2m | [22m
+
+Application bundle generation complete. [2.446 seconds] - 2026-05-01T14:23:10.926Z
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m4300[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m                   [2m | [22m[1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m                    [2m | [22m[36m51.05 kB[39m[2m | [22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m                   [2m | [22m[1mRaw size[22m
+[32mchunk-DC5IKTB7.js[39m  [2m | [22m[2mproduct-detail-component[22m[2m | [22m[36m72.87 kB[39m[2m | [22m
+[32mchunk-YIYDNSGV.js[39m  [2m | [22m[2mproducts-component[22m      [2m | [22m[36m62.99 kB[39m[2m | [22m
+[32mchunk-ONW6G2Z5.js[39m  [2m | [22m[2m-[22m                       [2m | [22m[36m25.83 kB[39m[2m | [22m
+
+Application bundle generation complete. [0.697 seconds] - 2026-05-01T14:26:48.362Z
+
+Page reload sent to client(s).
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.181 seconds] - 2026-05-01T14:26:52.801Z
+
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m                   [2m | [22m[1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m                    [2m | [22m[36m51.05 kB[39m[2m | [22m
+[32mchunk-D52LHH67.js[39m  [2m | [22m[2m-[22m                       [2m | [22m [36m2.94 kB[39m[2m | [22m
+[32mchunk-KMNVE3XT.js[39m  [2m | [22m[2m-[22m                       [2m | [22m [36m2.72 kB[39m[2m | [22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m                   [2m | [22m[1mRaw size[22m
+[32mchunk-52XLC3KS.js[39m  [2m | [22m[2mproduct-detail-component[22m[2m | [22m[36m72.87 kB[39m[2m | [22m
+[32mchunk-4QBGRFXD.js[39m  [2m | [22m[2mproducts-component[22m      [2m | [22m[36m62.99 kB[39m[2m | [22m
+[32mchunk-LLVPY74Z.js[39m  [2m | [22m[2m-[22m                       [2m | [22m[36m25.74 kB[39m[2m | [22m
+[32mchunk-M5O56HGE.js[39m  [2m | [22m[2mregister-component[22m      [2m | [22m[36m17.05 kB[39m[2m | [22m
+[32mchunk-HRMARVA7.js[39m  [2m | [22m[2mlogin-component[22m         [2m | [22m[36m13.97 kB[39m[2m | [22m
+
+Application bundle generation complete. [0.223 seconds] - 2026-05-01T14:27:00.782Z
+
+Page reload sent to client(s).

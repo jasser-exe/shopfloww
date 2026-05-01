@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.security.Key;
 import java.util.Date;
 
@@ -17,7 +19,12 @@ public class JwtUtil {
     private final long refreshTokenMs;
 
     public JwtUtil(@Value("${app.jwt.secret}") String secret) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+        try {
+            byte[] keyBytes = MessageDigest.getInstance("SHA-256").digest(secret.getBytes(StandardCharsets.UTF_8));
+            this.key = Keys.hmacShaKeyFor(keyBytes);
+        } catch (Exception e) {
+            throw new IllegalStateException("Unable to initialize JWT key", e);
+        }
         this.accessTokenMs = 15 * 60 * 1000L; // 15 minutes
         this.refreshTokenMs = 7 * 24 * 60 * 60 * 1000L; // 7 days
     }

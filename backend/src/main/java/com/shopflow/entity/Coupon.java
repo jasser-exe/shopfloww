@@ -22,7 +22,7 @@ public class Coupon extends BaseEntity {
     @Column(nullable = false)
     private CouponType type;
 
-    @Column(nullable = false)
+    @Column(name = "coupon_value", nullable = false)
     private BigDecimal value;
 
     private LocalDateTime expiresAt;

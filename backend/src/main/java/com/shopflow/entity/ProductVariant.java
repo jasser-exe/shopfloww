@@ -24,7 +24,7 @@ public class ProductVariant extends BaseEntity {
     @Column(nullable = false)
     private String attribute;
 
-    @Column(nullable = false)
+    @Column(name = "variant_value", nullable = false)
     private String value;
 
     @Column(nullable = false)

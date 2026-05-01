@@ -3,8 +3,8 @@ package com.shopflow.service;
 import com.shopflow.dto.request.CreateProductRequest;
 import com.shopflow.dto.response.ProductResponse;
 import com.shopflow.entity.Product;
+import com.shopflow.entity.User;
 import com.shopflow.entity.SellerProfile;
-import com.shopflow.exception.ForbiddenException;
 import com.shopflow.mapper.ProductMapper;
 import com.shopflow.repository.ProductRepository;
 import com.shopflow.repository.ReviewRepository;
@@ -52,8 +52,12 @@ class ProductServiceTest {
         request.setName("Test Product");
         request.setPrice(BigDecimal.valueOf(100));
 
+        User sellerUser = new User();
+        sellerUser.setId(sellerId);
+
         SellerProfile seller = new SellerProfile();
         seller.setId(sellerId);
+        seller.setUser(sellerUser);
 
         Product product = new Product();
         product.setName(request.getName());
@@ -62,10 +66,9 @@ class ProductServiceTest {
         ProductResponse response = new ProductResponse();
         response.setName(request.getName());
 
-        when(sellerProfileRepository.findById(sellerId)).thenReturn(Optional.of(seller));
-        when(productMapper.toEntity(request)).thenReturn(product);
-        when(productRepository.save(product)).thenReturn(product);
-        when(productMapper.toResponse(product)).thenReturn(response);
+        when(sellerProfileRepository.findAll()).thenReturn(java.util.List.of(seller));
+        when(productRepository.save(any(Product.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(productMapper.toResponse(any(Product.class))).thenReturn(response);
 
         // When
         ProductResponse result = productService.createProduct(sellerId, request);
@@ -73,8 +76,8 @@ class ProductServiceTest {
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getName()).isEqualTo(request.getName());
-        verify(productRepository).save(product);
-        verify(productMapper).toResponse(product);
+        verify(productRepository).save(any(Product.class));
+        verify(productMapper).toResponse(any(Product.class));
     }
 
     @Test
@@ -84,12 +87,16 @@ class ProductServiceTest {
         Long productId = 1L;
         Long userId = 1L;
 
+        User ownerUser = new User();
+        ownerUser.setId(2L);
+
         Product product = new Product();
         product.setId(productId);
         product.setActive(true);
 
         SellerProfile owner = new SellerProfile();
         owner.setId(2L); // Different seller
+        owner.setUser(ownerUser);
 
         product.setSeller(owner);
 
@@ -97,6 +104,7 @@ class ProductServiceTest {
 
         // When & Then
         assertThatThrownBy(() -> productService.softDeleteProduct(productId, userId))
-                .isInstanceOf(ForbiddenException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("do not own this product");
     }
 }

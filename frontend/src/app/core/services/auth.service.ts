@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import {
   UserPayload,
   AuthResponse,
@@ -9,13 +9,15 @@ import {
   RegisterRequest
 } from '../models/auth.model';
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private readonly apiUrl = 'http://localhost:8080/api';
+  private readonly apiUrl = environment.apiUrl;
 
   readonly currentUser = signal<UserPayload | null>(null);
 
@@ -100,6 +102,8 @@ export class AuthService {
     return payload as UserPayload;
   }
 }
+
+
 
 
 

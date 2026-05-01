@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,9 +61,13 @@ class OrderServiceTest {
         PlaceOrderRequest request = new PlaceOrderRequest();
         request.setAddressId(1L);
 
+        User customer = new User();
+        customer.setId(customerId);
+
         Cart cart = new Cart();
         cart.setId(1L);
-        cart.setCustomer(mock(User.class));
+        cart.setCustomer(customer);
+        cart.setItems(new ArrayList<>());
 
         Product product1 = new Product();
         product1.setId(1L);
@@ -84,18 +89,30 @@ class OrderServiceTest {
         item2.setProduct(product2);
         item2.setQuantity(1);
 
-        cart.setItems(List.of(item1, item2));
+        cart.setItems(new ArrayList<>(List.of(item1, item2)));
 
         Address address = new Address();
         address.setId(1L);
+        address.setStreet("123 Main St");
+        address.setCity("Paris");
+        address.setPostalCode("75001");
+        address.setCountry("FR");
 
         Order savedOrder = new Order();
         savedOrder.setId(1L);
+        savedOrder.setCustomer(customer);
+        savedOrder.setItems(new ArrayList<>());
+        savedOrder.setSubTotal(BigDecimal.valueOf(400));
+        savedOrder.setShippingFee(BigDecimal.valueOf(7));
+        savedOrder.setTotalTTC(BigDecimal.valueOf(407));
 
         when(cartRepository.findByCustomerId(customerId)).thenReturn(Optional.of(cart));
         when(addressRepository.findByIdAndUserId(request.getAddressId(), customerId)).thenReturn(Optional.of(address));
-        when(orderRepository.save(any(Order.class))).thenReturn(savedOrder);
-        when(orderItemRepository.save(any(OrderItem.class))).thenReturn(new OrderItem());
+        when(userRepository.findById(customerId)).thenReturn(Optional.of(customer));
+        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(orderItemRepository.save(any(OrderItem.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(cartRepository.save(any(Cart.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(productRepository.save(any(Product.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // When
         OrderResponse result = orderService.placeOrder(customerId, request);
@@ -106,7 +123,7 @@ class OrderServiceTest {
         verify(orderItemRepository, times(2)).save(any(OrderItem.class));
         verify(productRepository).save(product1);
         verify(productRepository).save(product2);
-        verify(cartRepository).delete(cart);
+        verify(cartRepository).save(cart);
         assertThat(product1.getStock()).isEqualTo(8); // 10 - 2
         assertThat(product2.getStock()).isEqualTo(4); // 5 - 1
     }
@@ -120,7 +137,9 @@ class OrderServiceTest {
         request.setAddressId(1L);
 
         Cart cart = new Cart();
-        cart.setCustomer(mock(User.class));
+        User customer = new User();
+        customer.setId(customerId);
+        cart.setCustomer(customer);
 
         Product product = new Product();
         product.setName("Product");
@@ -150,10 +169,17 @@ class OrderServiceTest {
         Long orderId = 1L;
         Long customerId = 1L;
 
+        User customer = new User();
+        customer.setId(customerId);
+
         Order order = new Order();
         order.setId(orderId);
         order.setStatus(OrderStatus.PENDING);
-        order.setCustomer(mock(User.class));
+        order.setCustomer(customer);
+        order.setSubTotal(BigDecimal.valueOf(100));
+        order.setShippingFee(BigDecimal.valueOf(7));
+        order.setTotalTTC(BigDecimal.valueOf(107));
+        order.setItems(new ArrayList<>());
 
         Product product = new Product();
         product.setStock(10);
@@ -161,6 +187,7 @@ class OrderServiceTest {
         OrderItem orderItem = new OrderItem();
         orderItem.setProduct(product);
         orderItem.setQuantity(2);
+        orderItem.setUnitPrice(BigDecimal.valueOf(10));
 
         order.setItems(List.of(orderItem));
 
@@ -183,14 +210,23 @@ class OrderServiceTest {
         Long orderId = 1L;
         Long customerId = 1L;
 
+        User customer = new User();
+        customer.setId(customerId);
+
         Order order = new Order();
         order.setStatus(OrderStatus.DELIVERED);
+        order.setCustomer(customer);
+        order.setSubTotal(BigDecimal.valueOf(100));
+        order.setShippingFee(BigDecimal.valueOf(7));
+        order.setTotalTTC(BigDecimal.valueOf(107));
+        order.setItems(new ArrayList<>());
 
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
 
         // When & Then
         assertThatThrownBy(() -> orderService.cancelOrder(orderId, customerId))
-                .isInstanceOf(IllegalStateException.class); // Assuming OrderStatusException extends this
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Cannot cancel order");
     }
 
     @Test
@@ -203,6 +239,13 @@ class OrderServiceTest {
 
         Order order = new Order();
         order.setStatus(OrderStatus.PENDING);
+        User customer = new User();
+        customer.setId(requesterId);
+        order.setCustomer(customer);
+        order.setSubTotal(BigDecimal.valueOf(100));
+        order.setShippingFee(BigDecimal.valueOf(7));
+        order.setTotalTTC(BigDecimal.valueOf(107));
+        order.setItems(new ArrayList<>());
 
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
 
@@ -224,11 +267,19 @@ class OrderServiceTest {
 
         Order order = new Order();
         order.setStatus(OrderStatus.PAID);
+        User customer = new User();
+        customer.setId(requesterId);
+        order.setCustomer(customer);
+        order.setSubTotal(BigDecimal.valueOf(100));
+        order.setShippingFee(BigDecimal.valueOf(7));
+        order.setTotalTTC(BigDecimal.valueOf(107));
+        order.setItems(new ArrayList<>());
 
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
 
         // When & Then
         assertThatThrownBy(() -> orderService.updateStatus(orderId, OrderStatus.PENDING, requesterId, role))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Invalid status transition");
     }
 }

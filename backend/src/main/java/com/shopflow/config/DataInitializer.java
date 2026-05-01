@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -24,7 +23,7 @@ public class DataInitializer implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (userRepository.count() > 0) {
             return; // Data already seeded
         }
@@ -49,10 +48,8 @@ public class DataInitializer implements CommandLineRunner {
 
         SellerProfile seller1Profile = SellerProfile.builder()
                 .user(seller1)
-                .businessName("TechHub Electronics")
+                .shopName("TechHub Electronics")
                 .description("Premium electronics and gadgets")
-                .phone("+1-555-0101")
-                .address("123 Tech Street, Silicon Valley, CA")
                 .build();
         sellerProfileRepository.save(seller1Profile);
 
@@ -66,10 +63,8 @@ public class DataInitializer implements CommandLineRunner {
 
         SellerProfile seller2Profile = SellerProfile.builder()
                 .user(seller2)
-                .businessName("Fashion Forward")
+                .shopName("Fashion Forward")
                 .description("Trendy clothing and accessories")
-                .phone("+1-555-0102")
-                .address("456 Fashion Ave, New York, NY")
                 .build();
         sellerProfileRepository.save(seller2Profile);
 

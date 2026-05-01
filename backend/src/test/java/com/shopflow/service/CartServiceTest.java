@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,9 +30,6 @@ class CartServiceTest {
 
     @Mock
     private CartRepository cartRepository;
-
-    @Mock
-    private CartItemRepository cartItemRepository;
 
     @Mock
     private ProductRepository productRepository;
@@ -55,21 +54,23 @@ class CartServiceTest {
 
         Cart cart = new Cart();
         cart.setId(1L);
+        cart.setItems(new ArrayList<>());
 
         Product product = new Product();
         product.setId(1L);
+        product.setPrice(BigDecimal.valueOf(10));
         product.setStock(10);
 
         when(cartRepository.findByCustomerId(customerId)).thenReturn(Optional.of(cart));
         when(productRepository.findById(request.getProductId())).thenReturn(Optional.of(product));
-        when(cartItemRepository.save(any(CartItem.class))).thenReturn(new CartItem());
+        when(cartRepository.save(any(Cart.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // When
         CartResponse result = cartService.addItem(customerId, request);
 
         // Then
         assertThat(result).isNotNull();
-        verify(cartItemRepository).save(any(CartItem.class));
+        verify(cartRepository).save(cart);
     }
 
     @Test
@@ -86,23 +87,25 @@ class CartServiceTest {
 
         Product product = new Product();
         product.setId(1L);
+        product.setPrice(BigDecimal.valueOf(10));
         product.setStock(10);
 
         CartItem existingItem = new CartItem();
         existingItem.setProduct(product);
         existingItem.setQuantity(2);
 
-        cart.setItems(List.of(existingItem));
+        cart.setItems(new ArrayList<>(List.of(existingItem)));
 
         when(cartRepository.findByCustomerId(customerId)).thenReturn(Optional.of(cart));
         when(productRepository.findById(request.getProductId())).thenReturn(Optional.of(product));
+        when(cartRepository.save(any(Cart.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // When
         CartResponse result = cartService.addItem(customerId, request);
 
         // Then
         assertThat(existingItem.getQuantity()).isEqualTo(5); // 2 + 3
-        verify(cartItemRepository).save(existingItem);
+        verify(cartRepository).save(cart);
     }
 
     @Test
@@ -119,7 +122,6 @@ class CartServiceTest {
         Product product = new Product();
         product.setStock(10);
 
-        when(cartRepository.findByCustomerId(customerId)).thenReturn(Optional.of(cart));
         when(productRepository.findById(request.getProductId())).thenReturn(Optional.of(product));
 
         // When & Then
@@ -135,24 +137,23 @@ class CartServiceTest {
         String code = "VALID10";
 
         Cart cart = new Cart();
-        cart.setTotal(BigDecimal.valueOf(100));
 
         Coupon coupon = new Coupon();
         coupon.setCode(code);
-        coupon.setType(CouponType.PERCENTAGE);
+        coupon.setType(CouponType.PERCENT);
         coupon.setValue(BigDecimal.valueOf(10));
         coupon.setActive(true);
         coupon.setExpiresAt(LocalDateTime.now().plusDays(1));
 
         when(cartRepository.findByCustomerId(customerId)).thenReturn(Optional.of(cart));
-        when(couponRepository.findByCode(code)).thenReturn(Optional.of(coupon));
+        when(couponRepository.findByCodeAndActiveTrue(code)).thenReturn(Optional.of(coupon));
 
         // When
         CartResponse result = cartService.applyCoupon(customerId, code);
 
         // Then
         assertThat(result).isNotNull();
-        assertThat(cart.getCoupon()).isEqualTo(coupon);
+        assertThat(cart.getAppliedCoupon()).isEqualTo(coupon);
         verify(cartRepository).save(cart);
     }
 
@@ -171,7 +172,7 @@ class CartServiceTest {
         coupon.setExpiresAt(LocalDateTime.now().minusDays(1)); // Expired
 
         when(cartRepository.findByCustomerId(customerId)).thenReturn(Optional.of(cart));
-        when(couponRepository.findByCode(code)).thenReturn(Optional.of(coupon));
+        when(couponRepository.findByCodeAndActiveTrue(code)).thenReturn(Optional.of(coupon));
 
         // When & Then
         assertThatThrownBy(() -> cartService.applyCoupon(customerId, code))

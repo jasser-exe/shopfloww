@@ -5,6 +5,8 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.security.Key;
 import java.util.Date;
 
@@ -16,7 +18,12 @@ public class JwtUtils {
 
     public JwtUtils(@Value("${app.jwt.secret}") String secret,
                     @Value("${app.jwt.expiration-ms}") long expirationMs) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+        try {
+            byte[] keyBytes = MessageDigest.getInstance("SHA-256").digest(secret.getBytes(StandardCharsets.UTF_8));
+            this.key = Keys.hmacShaKeyFor(keyBytes);
+        } catch (Exception e) {
+            throw new IllegalStateException("Unable to initialize JWT key", e);
+        }
         this.expirationMs = expirationMs;
     }
 
