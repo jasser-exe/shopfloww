@@ -1,0 +1,9 @@
+# Root ignore rules for ShopFlow
+.idea/
+.vscode/
+backend/target/
+frontend/dist/
+frontend/node_modules/
+frontend/.angular/
+frontend/.vscode/
+
